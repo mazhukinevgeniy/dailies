@@ -1,7 +1,10 @@
 import QtQuick 2.0
 
 Flickable {
+    flickableDirection: Flickable.VerticalFlick
+
     Column {
+        id: mainColumn
         width: parent.width
         height: repeater.count * (taskRowHeight + normalSpacing)
         y: normalSpacing * 0.5
@@ -14,11 +17,12 @@ Flickable {
             model: ListModel {
                 ListElement {
                     title: "Default task A"
-                    age: 3
                 }
                 ListElement {
                     title: "Default task B"
-                    age: 15
+                }
+                ListElement {
+                    title: ""
                 }
             }
 

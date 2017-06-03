@@ -1,6 +1,7 @@
 import QtQuick 2.0
 
 ListView {
+    id: list
     model: ListModel {
         ListElement {
             date: "tomorrow"
@@ -18,4 +19,12 @@ ListView {
     spacing: normalSpacing
 
     delegate: DailyCheckListDelegate {}
+
+    Connections {
+        target: list.visible ? app : null
+
+        onNewDay: {
+            model.append({"date": "yet another date"})
+        }//TODO: move it elsewhere and just update underlying sql for all models
+    }
 }
