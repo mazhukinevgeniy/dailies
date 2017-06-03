@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>DailyCheckList.qml</file>
+        <file>DailyCheckListDelegate.qml</file>
     </qresource>
 </RCC>
