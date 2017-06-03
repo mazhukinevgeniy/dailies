@@ -14,7 +14,8 @@ ListView {
     }
 
     orientation: Qt.Horizontal
-    spacing: tileWidth * 0.1
+    layoutDirection: Qt.RightToLeft
+    spacing: normalSpacing
 
     delegate: DailyCheckListDelegate {}
 }
