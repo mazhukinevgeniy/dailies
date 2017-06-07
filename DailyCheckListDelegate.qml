@@ -10,17 +10,27 @@ MouseArea {
         anchors.fill: parent
     }
 
+    Column {
+        spacing: normalSpacing
+
+        Text {
+            text: "Check id: " + model.checkId //TODO: remove, it is ugly and is a distraction
+        }
+        Text {
+            text: "State: " + tile.state
+        }
+    }
+
+
     states: [
         State {
             name: "to be done"
+            when: model.status === check_tbd
 
             PropertyChanges {
                 target: tile
                 onClicked: {
-                    tile.state = "done"
-                }
-                onPressAndHold: {
-                    tile.state = "failed"
+                    tasks.markDone(model.checkId)
                 }
             }
             PropertyChanges {
@@ -30,35 +40,21 @@ MouseArea {
         },
         State {
             name: "done"
+            when: model.status === check_done
 
             PropertyChanges {
-                target: tile
-                onPressAndHold: {
-                    tile.state = "to be done"
-                }
-            }
-            PropertyChanges {
                 target: background
-                color: "green"
+                color: "#88FF88"
             }
         },
         State {
             name: "failed"
+            when: model.status === check_failed
 
-            PropertyChanges {
-                target: tile
-                onPressAndHold: {
-                    tile.state = "to be done"
-                }
-            }
             PropertyChanges {
                 target: background
                 color: "#444444"
             }
         }
     ]
-
-    Component.onCompleted: {
-        tile.state = "to be done"
-    }
 }

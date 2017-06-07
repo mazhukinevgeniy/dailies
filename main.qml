@@ -6,18 +6,12 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("HeyGuys")
+    title: qsTr("Nothing beats suddenly spending two hours to reinstall MySQL")
 
-    property int tileWidth: 80
+    property int tileWidth: 60
     property int taskRowHeight: tileWidth
     property int titlePanelWidth: tileWidth * 2.0
-    property int normalSpacing: 20
-
-    signal newDay()
-
-    signal resetDB()
-    signal fixDB()
-    property bool developingDB: true
+    property int normalSpacing: 10
 
     Item {
         id: contentSpace
@@ -26,6 +20,7 @@ Window {
 
         TaskList {
             anchors.fill: parent
+            anchors.topMargin: normalSpacing * 0.5
         }
 
         Rectangle {

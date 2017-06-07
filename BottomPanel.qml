@@ -1,33 +1,26 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
 
-Item {
+Rectangle {
+    color: "white"
+
     Row {
         anchors.fill: parent
-        anchors.margins: normalSpacing * 0.5
-        spacing: normalSpacing * 0.5
+        anchors.margins: normalSpacing
+        spacing: normalSpacing
 
         Button {
             text: qsTr("Call it a day")
             height: parent.height
 
-            onClicked: newDay()
+            onClicked: tasks.endDay()
         }
 
         Button {
             text: qsTr("Reset DB")
             height: parent.height
-            visible: developingDB
 
-            onClicked: resetDB()
-        }
-
-        Button {
-            text: qsTr("Fix DB")
-            height: parent.height
-            visible: developingDB
-
-            onClicked: fixDB()
+            onClicked: tasks.resetDatabase()
         }
     }
 }

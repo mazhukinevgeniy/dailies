@@ -1,32 +1,41 @@
 import QtQuick 2.0
 
-Flickable {
-    flickableDirection: Flickable.VerticalFlick
+ListView {
+    id: list
+    spacing: normalSpacing
 
-    Column {
-        id: mainColumn
+    model: tasks.getTasksQueryModel()
+
+    delegate: Row {
+        id: taskListDelegate
         width: parent.width
-        height: repeater.count * (taskRowHeight + normalSpacing)
-        y: normalSpacing * 0.5
+        height: taskRowHeight
         spacing: normalSpacing
+        layoutDirection: Qt.RightToLeft
 
-        Repeater {
-            id: repeater
-            width: parent.width
+        property var taskId: model.taskId
 
-            model: ListModel {
-                ListElement {
-                    title: "Default task A"
-                }
-                ListElement {
-                    title: "Default task B"
-                }
-                ListElement {
-                    title: ""
-                }
-            }
+        Text {
+            id: rowDescription
+            width: titlePanelWidth - normalSpacing * 0.5
+            height: parent.height
+            text: model.description
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+        }
 
-            delegate: TaskListRowDelegate {}
+        DailyCheckList {
+            id: checks
+            width: parent.width - titlePanelWidth - normalSpacing * 0.5
+            height: parent.height
+        }
+    }
+
+    Connections {
+        target: tasks
+
+        onUpdateTasksModel: {
+            list.model = tasks.getTasksQueryModel()
         }
     }
 }

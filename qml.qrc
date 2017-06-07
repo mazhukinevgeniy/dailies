@@ -5,6 +5,5 @@
         <file>DailyCheckListDelegate.qml</file>
         <file>BottomPanel.qml</file>
         <file>TaskList.qml</file>
-        <file>TaskListRowDelegate.qml</file>
     </qresource>
 </RCC>
