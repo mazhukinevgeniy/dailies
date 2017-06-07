@@ -6,7 +6,7 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: "Who cares about clean commits when changing titles is fun"
+    title: "Enough of this, let's get down to the real business now"
 
     property int tileWidth: 64
     property int taskRowHeight: tileWidth

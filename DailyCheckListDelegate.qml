@@ -10,10 +10,6 @@ MouseArea {
         anchors.fill: parent
     }
 
-    Text {
-        text: "Check id: " + model.checkId //TODO: remove, it is ugly and is a distraction
-    }
-
     states: [
         State {
             name: "to be done"

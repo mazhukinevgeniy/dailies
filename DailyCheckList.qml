@@ -11,7 +11,7 @@ ListView {
     delegate: DailyCheckListDelegate {}
 
     Connections {
-        target: tasks
+        target: visible ? tasks : null
 
         onUpdateChecksModel: {
             list.model = tasks.getChecksQueryModel(taskListDelegate.taskId)

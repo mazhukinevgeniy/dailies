@@ -42,12 +42,13 @@ ListView {
         spacing: normalSpacing
         layoutDirection: Qt.RightToLeft
 
-        TextEdit {
+        TextArea {
             id: newTask
             width: titlePanelWidth - normalSpacing * 0.5
             height: parent.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
+            placeholderText: "Add new task..."
             state: "untouched"
 
             states: [
@@ -56,8 +57,8 @@ ListView {
 
                     PropertyChanges {
                         target: newTask
-
-                        text: "Add new task..."
+                        restoreEntryValues: false
+                        text: ""
                         focus: false
                         onActiveFocusChanged: {
                             if (newTask.activeFocus) {
@@ -71,7 +72,7 @@ ListView {
 
                     PropertyChanges {
                         target: newTask
-                        text: ""
+                        restoreEntryValues: false
                         onActiveFocusChanged: {
                             if (!newTask.activeFocus && newTask.text === "") {
                                 newTask.state = "untouched"
@@ -97,4 +98,5 @@ ListView {
             list.model = tasks.getTasksQueryModel()
         }
     }
+    //TODO: stabilize - weird bugs happen when a lot of tasks are in the list
 }

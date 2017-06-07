@@ -27,7 +27,7 @@ public:
     void resetDatabase();
 signals:
     void updateTasksModel();
-    void updateChecksModel();//TODO: maybe pass taskId; maybe google how is it actually done
+    void updateChecksModel();
 };
 
 #endif // TASKS_H
