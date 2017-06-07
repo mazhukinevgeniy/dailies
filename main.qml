@@ -6,9 +6,9 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Nothing beats suddenly spending two hours to reinstall MySQL")
+    title: "Who cares about clean commits when changing titles is fun"
 
-    property int tileWidth: 60
+    property int tileWidth: 64
     property int taskRowHeight: tileWidth
     property int titlePanelWidth: tileWidth * 2.0
     property int normalSpacing: 10
@@ -45,4 +45,10 @@ Window {
             color: "black"
         }
     }
+
+    Notification {
+        id: acknowledgements
+        anchors.fill: parent
+        visible: false
+    }//TODO(low priority): make it loader-based someday
 }

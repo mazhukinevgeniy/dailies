@@ -23,4 +23,20 @@ Rectangle {
             onClicked: tasks.resetDatabase()
         }
     }
+
+    Row {
+        anchors.fill: parent
+        anchors.margins: normalSpacing
+        spacing: normalSpacing
+        layoutDirection: Qt.RightToLeft
+
+        Button {
+            text: qsTr("Acknowledgements")
+            height: parent.height
+
+            onClicked: {
+                acknowledgements.visible = true
+            }
+        }
+    }
 }

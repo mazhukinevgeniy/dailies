@@ -5,22 +5,14 @@ MouseArea {
     width: tileWidth
     height: width
 
-    Rectangle {
-        id: background
+    Image {
+        id: image
         anchors.fill: parent
     }
 
-    Column {
-        spacing: normalSpacing
-
-        Text {
-            text: "Check id: " + model.checkId //TODO: remove, it is ugly and is a distraction
-        }
-        Text {
-            text: "State: " + tile.state
-        }
+    Text {
+        text: "Check id: " + model.checkId //TODO: remove, it is ugly and is a distraction
     }
-
 
     states: [
         State {
@@ -34,8 +26,8 @@ MouseArea {
                 }
             }
             PropertyChanges {
-                target: background
-                color: "#DDDDDD"
+                target: image
+                source: "assets/001-info.png"
             }
         },
         State {
@@ -43,8 +35,8 @@ MouseArea {
             when: model.status === check_done
 
             PropertyChanges {
-                target: background
-                color: "#88FF88"
+                target: image
+                source: "assets/003-success.png"
             }
         },
         State {
@@ -52,8 +44,8 @@ MouseArea {
             when: model.status === check_failed
 
             PropertyChanges {
-                target: background
-                color: "#444444"
+                target: image
+                source: "assets/002-error.png"
             }
         }
     ]
