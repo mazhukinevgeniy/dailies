@@ -6,7 +6,7 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: "Enough of this, let's get down to the real business now"
+    title: "Daily app title"
 
     property int tileWidth: 64
     property int taskRowHeight: tileWidth
@@ -51,4 +51,28 @@ Window {
         anchors.fill: parent
         visible: false
     }//TODO(low priority): make it loader-based someday
+
+    Timer {
+        id: titleTimer
+        interval: 1000*40
+        repeat: true
+        running: true
+        triggeredOnStart: true
+
+        property var titles: [
+            "Enough of this",
+            "Let's get down to the real business now",
+            "Such resilence!",
+            "Still sane, exile?",
+            "Down to biz, down to work",
+            "HeyGuys",
+            "What are you procrastinating on?",
+            "Maybe it's time to relax",
+            "We're only in it for the money"
+        ]
+
+        onTriggered: {
+            app.title = titles[Math.floor(Math.random() * titles.length)]
+        }
+    }
 }
