@@ -10,9 +10,9 @@ public:
     explicit Tasks(QObject *parent = nullptr);
 
     Q_INVOKABLE
-    QSqlQueryModel * getChecksQueryModel(QVariant taskId);
+    QSqlQueryModel* getChecksQueryModel(QVariant taskId);
     Q_INVOKABLE
-    QSqlQueryModel * getTasksQueryModel();
+    QSqlQueryModel* getTasksQueryModel();
 
     Q_INVOKABLE
     void addTask(QString description);
@@ -28,6 +28,9 @@ public:
 signals:
     void updateTasksModel();
     void updateChecksModel();
+
+private:
+    QSqlDatabase db;
 };
 
 #endif // TASKS_H
