@@ -60,15 +60,9 @@ Window {
         triggeredOnStart: true
 
         property var titles: [
-            "Enough of this",
-            "Let's get down to the real business now",
-            "Such resilence!",
-            "Still sane, exile?",
-            "Down to biz, down to work",
-            "HeyGuys",
-            "What are you procrastinating on?",
-            "Maybe it's time to relax",
-            "We're only in it for the money"
+            "Coding on the weekend",
+            "Good enough to ship",
+            "Old piece of cardboard vs Sound financial decisions"
         ]
 
         onTriggered: {
