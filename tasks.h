@@ -25,11 +25,17 @@ public:
 
     Q_INVOKABLE
     void resetDatabase();
+
 signals:
     void updateTasksModel();
     void updateChecksModel();
 
 private:
+    QSqlQuery execute(QString query);
+
+    void initTables();
+    void addCheck(QVariant taskId);
+
     QSqlDatabase db;
 };
 
