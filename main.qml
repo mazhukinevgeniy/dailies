@@ -4,8 +4,8 @@ import QtQuick.Window 2.2
 Window {
     id: app
     visible: true
-    width: 640
-    height: 480
+    minimumWidth: 800 * 1.1
+    minimumHeight: 600 * 1.1
     title: "Daily app title"
 
     property int tileWidth: 64

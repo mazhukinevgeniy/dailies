@@ -98,5 +98,4 @@ ListView {
             list.model = tasks.getTasksQueryModel()
         }
     }
-    //TODO: stabilize - weird bugs happen when a lot of tasks are in the list
 }
