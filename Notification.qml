@@ -2,6 +2,7 @@ import QtQuick 2.0
 
 Item {
     id: notification
+    //TODO: why is it called a notification? reconsider
 
     Rectangle {
         anchors.fill: parent
@@ -21,6 +22,15 @@ Item {
         anchors.margins: 100
         radius: 30
         color: "white"
+
+        Image {
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: 15
+            width: sourceSize.width * 0.55
+            height: sourceSize.height * 0.55
+            source: "assets/setter.jpeg"
+        }
 
         Column {
             anchors.fill: parent
