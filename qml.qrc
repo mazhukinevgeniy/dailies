@@ -10,5 +10,6 @@
         <file>assets/002-error.png</file>
         <file>assets/003-success.png</file>
         <file>assets/setter.jpeg</file>
+        <file>FlatButton.qml</file>
     </qresource>
 </RCC>

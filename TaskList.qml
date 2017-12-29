@@ -15,23 +15,25 @@ ListView {
         id: taskListDelegate
         width: parent.width
         height: taskRowHeight
-        spacing: normalSpacing
+        spacing: normalSpacing * 0.5
         layoutDirection: Qt.RightToLeft
 
         property var taskId: model.taskId
 
-        Text {
-            id: rowDescription
-            width: titlePanelWidth - normalSpacing * 0.5
+        Item {
+            width: titlePanelWidth
             height: parent.height
-            text: model.description
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
+
+            FlatButton {
+                anchors.fill: parent
+                anchors.margins: normalSpacing * 0.5
+                text: model.description
+            }
         }
 
         DailyCheckList {
             id: checks
-            width: parent.width - titlePanelWidth - normalSpacing * 0.5
+            width: parent.width - titlePanelWidth - parent.spacing
             height: parent.height
             interactive: false
         }
