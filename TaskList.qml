@@ -33,6 +33,7 @@ ListView {
             id: checks
             width: parent.width - titlePanelWidth - normalSpacing * 0.5
             height: parent.height
+            interactive: false
         }
     }
 
