@@ -86,7 +86,6 @@ void Tasks::markDone(QVariant checkId) {
             .arg(__TASK_STATUS_DONE_FOR_NOW).arg(checkId.toLongLong()));
 
     updateTasksModel();
-    updateChecksModel();
 }
 
 void Tasks::endDay() {
@@ -103,7 +102,6 @@ void Tasks::endDay() {
     }
 
     updateTasksModel();
-    updateChecksModel();
 }
 
 void Tasks::resetDatabase() {
@@ -112,5 +110,4 @@ void Tasks::resetDatabase() {
     initTables();
 
     updateTasksModel();
-    updateChecksModel();
 }
