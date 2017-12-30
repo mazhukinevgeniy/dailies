@@ -1,28 +1,9 @@
 import QtQuick 2.0
 
-Item {
-    id: notification
-    //TODO: why is it called a notification? reconsider
+BaseDialog {
+    interactive: false
 
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
-        opacity: 0.5
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                notification.visible = false
-            }
-        }
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        anchors.margins: 100
-        radius: 30
-        color: "white"
-
+    contentDelegate: Item {
         Image {
             anchors.right: parent.right
             anchors.bottom: parent.bottom

@@ -5,11 +5,12 @@
         <file>DailyCheckListDelegate.qml</file>
         <file>BottomPanel.qml</file>
         <file>TaskList.qml</file>
-        <file>Notification.qml</file>
+        <file>Acknowledgements.qml</file>
         <file>assets/001-info.png</file>
         <file>assets/002-error.png</file>
         <file>assets/003-success.png</file>
         <file>assets/setter.jpeg</file>
         <file>FlatButton.qml</file>
+        <file>BaseDialog.qml</file>
     </qresource>
 </RCC>

@@ -46,7 +46,7 @@ Window {
         }
     }
 
-    Notification {
+    Acknowledgements {
         id: acknowledgements
         anchors.fill: parent
         visible: false
