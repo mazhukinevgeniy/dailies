@@ -28,6 +28,11 @@ ListView {
                 anchors.fill: parent
                 anchors.margins: normalSpacing * 0.5
                 text: model.description
+
+                onClicked: {
+                    //TODO: open edit dialog
+                    tasks.removeTask(model.taskId)
+                }
             }
         }
 

@@ -78,6 +78,11 @@ void Tasks::addTask(QString description) {
     updateTasksModel();//no need to updateChecksModel as check model for the new task would be fresh anyway
 }
 
+void Tasks::removeTask(QVariant taskId) {
+    execute(QString("DELETE FROM tasks WHERE taskId='%1'").arg(taskId.toLongLong()));
+    updateTasksModel();
+}
+
 void Tasks::markDone(QVariant checkId) {
     execute(QString("UPDATE checks SET status='%1' WHERE checkId='%2'")
             .arg(__CHECK_STATUS_DONE).arg(checkId.toLongLong()));
