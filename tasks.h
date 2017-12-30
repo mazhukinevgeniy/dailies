@@ -17,7 +17,7 @@ public:
     Q_INVOKABLE
     void addTask(QString description);
     Q_INVOKABLE
-    void removeTask(QVariant taskId);
+    void disableTask(QVariant taskId);
 
     Q_INVOKABLE
     void markDone(QVariant checkId);

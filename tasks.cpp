@@ -49,7 +49,10 @@ QSqlQueryModel * Tasks::getChecksQueryModel(QVariant taskId) {
 
 QSqlQueryModel * Tasks::getTasksQueryModel() {
     SqlQueryModel *model = new SqlQueryModel();
-    model->setQuery("SELECT taskId, description, status FROM tasks ORDER BY status, taskId", db);
+    model->setQuery(QString("SELECT taskId, description, status FROM tasks "
+                            "WHERE NOT status='%1' "
+                            "ORDER BY status, taskId")
+                    .arg(__TASK_STATUS_DISABLED), db);
     return model;
 }
 
@@ -78,8 +81,9 @@ void Tasks::addTask(QString description) {
     updateTasksModel();//no need to updateChecksModel as check model for the new task would be fresh anyway
 }
 
-void Tasks::removeTask(QVariant taskId) {
-    execute(QString("DELETE FROM tasks WHERE taskId='%1'").arg(taskId.toLongLong()));
+void Tasks::disableTask(QVariant taskId) {
+    execute(QString("UPDATE tasks SET status='%1' WHERE taskId='%2'")
+            .arg(__TASK_STATUS_DISABLED).arg(taskId.toLongLong()));
     updateTasksModel();
 }
 
@@ -100,8 +104,7 @@ void Tasks::endDay() {
     execute(QString("UPDATE tasks SET status='%1' WHERE status='%2'")
             .arg(__TASK_STATUS_ACTIVE).arg(__TASK_STATUS_DONE_FOR_NOW));
 
-    auto knownTasks = execute(QString("SELECT taskId FROM tasks WHERE NOT status='%1'")
-                              .arg(__TASK_STATUS_DISABLED));
+    auto knownTasks = execute(QString("SELECT taskId FROM tasks"));
     while (knownTasks.next()) {
         addCheck(knownTasks.value(0));
     }

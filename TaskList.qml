@@ -31,7 +31,7 @@ ListView {
 
                 onClicked: {
                     //TODO: open edit dialog
-                    tasks.removeTask(model.taskId)
+                    tasks.disableTask(model.taskId)
                 }
             }
         }
