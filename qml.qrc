@@ -12,5 +12,6 @@
         <file>assets/setter.jpeg</file>
         <file>FlatButton.qml</file>
         <file>BaseDialog.qml</file>
+        <file>AddTaskDialog.qml</file>
     </qresource>
 </RCC>

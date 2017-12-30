@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import QtQuick.Controls 2.1
 
 ListView {
     id: list
@@ -45,50 +44,18 @@ ListView {
         spacing: normalSpacing
         layoutDirection: Qt.RightToLeft
 
-        TextArea {
-            id: newTask
-            width: titlePanelWidth - normalSpacing * 0.5
+
+        Item {
+            width: titlePanelWidth
             height: parent.height
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            placeholderText: "Add new task..."
-            state: "untouched"
 
-            states: [
-                State {
-                    name: "untouched"
+            FlatButton {
+                anchors.fill: parent
+                anchors.margins: normalSpacing * 0.5
+                text: "Add new task"
 
-                    PropertyChanges {
-                        target: newTask
-                        restoreEntryValues: false
-                        text: ""
-                        focus: false
-                        onActiveFocusChanged: {
-                            if (newTask.activeFocus) {
-                                newTask.state = "inputting"
-                            }
-                        }
-                    }
-                },
-                State {
-                    name: "inputting"
-
-                    PropertyChanges {
-                        target: newTask
-                        restoreEntryValues: false
-                        onActiveFocusChanged: {
-                            if (!newTask.activeFocus && newTask.text === "") {
-                                newTask.state = "untouched"
-                            }
-                        }
-                    }
-                }
-            ]
-
-            Keys.onReturnPressed: {
-                if (state === "inputting") {
-                    tasks.addTask(text)
-                    state = "untouched"
+                onClicked: {
+                    addTaskDialog.visible = true
                 }
             }
         }

@@ -48,9 +48,11 @@ Window {
 
     Acknowledgements {
         id: acknowledgements
-        anchors.fill: parent
-        visible: false
     }//TODO(low priority): make it loader-based someday
+
+    AddTaskDialog {
+        id: addTaskDialog
+    }
 
     Timer {
         id: titleTimer
@@ -67,6 +69,14 @@ Window {
 
         onTriggered: {
             app.title = titles[Math.floor(Math.random() * titles.length)]
+        }
+    }
+
+    Item {
+        id: quick
+
+        function bound(value, min, max) {
+            return Math.min(max, Math.max(value, min))
         }
     }
 }

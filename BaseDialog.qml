@@ -2,6 +2,8 @@ import QtQuick 2.0
 
 Item {
     id: dialog
+    anchors.fill: parent
+    visible: false
 
     property bool interactive: true
     property Component contentDelegate: undefined
