@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Controls 2.1
 
 ListView {
     id: list
@@ -23,7 +24,7 @@ ListView {
             width: titlePanelWidth
             height: parent.height
 
-            FlatButton {
+            Button {
                 anchors.fill: parent
                 anchors.margins: normalSpacing * 0.5
                 text: model.description
@@ -49,7 +50,7 @@ ListView {
             width: titlePanelWidth
             height: parent.height
 
-            FlatButton {
+            Button {
                 anchors.fill: parent
                 anchors.margins: normalSpacing * 0.5
                 text: "Add new task"

@@ -10,7 +10,7 @@ Window {
 
     property int tileWidth: 64
     property int taskRowHeight: tileWidth
-    property int titlePanelWidth: tileWidth * 2.0
+    property int titlePanelWidth: tileWidth * 2.5
     property int normalSpacing: 10
 
     Item {

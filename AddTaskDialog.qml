@@ -63,7 +63,7 @@ BaseDialog {
             height: taskRowHeight
             spacing: normalSpacing
 
-            FlatButton {
+            Button {
                 width: (newTask.width - normalSpacing) * 0.5
                 height: parent.height
                 text: "Cancel"
@@ -73,7 +73,7 @@ BaseDialog {
                 }
             }
 
-            FlatButton {
+            Button {
                 width: (newTask.width - normalSpacing) * 0.5
                 height: parent.height
                 text: "Create"
