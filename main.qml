@@ -79,4 +79,16 @@ Window {
             return Math.min(max, Math.max(value, min))
         }
     }
+
+    Item {
+        id: stat
+
+        property date dayStarted: undefined
+
+        Component.onCompleted: {
+            stat.dayStarted = new Date()
+            //TODO: (low priority) recover time of last reset from DB
+            //the app is supposed to run all the time, so current solution would do...
+        }
+    }
 }

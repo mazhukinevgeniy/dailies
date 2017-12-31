@@ -58,10 +58,34 @@ ListView {
             Button {
                 anchors.fill: parent
                 anchors.margins: normalSpacing * 0.5
-                text: "Add new task"
+                text: qsTr("Add new task")
 
                 onClicked: {
                     addTaskDialog.visible = true
+                }
+            }
+        }
+
+        Text {
+            height: parent.height
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            text: qsTr("Day started %1 ago").arg(variableTime)
+
+            property string variableTime: "00:00:00.000"
+
+            Timer {
+                interval: 3
+                repeat: true
+                running: true
+                triggeredOnStart: true
+
+                onTriggered: {
+                    var timeDifference = new Date().getTime() - stat.dayStarted.getTime()
+                    parent.variableTime =
+                            timeDifference < 1000 * 60 * 60 * 24 ?
+                                new Date(timeDifference).toISOString().slice(11, -1) :
+                                qsTr("over 24 hours")
                 }
             }
         }

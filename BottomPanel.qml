@@ -13,7 +13,12 @@ Rectangle {
             text: qsTr("Call it a day")
             height: parent.height
 
-            onClicked: tasks.endDay()
+            onClicked: {
+                stat.dayStarted = new Date()
+                tasks.endDay()
+                //TODO: replace with slot to run on a separate event queue
+                // ? if it doesn't work, explicitly create a thread for such tasks
+            }
         }
 
         Button {
