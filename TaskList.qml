@@ -75,7 +75,7 @@ ListView {
             property string variableTime: "00:00:00.000"
 
             Timer {
-                interval: 3
+                interval: 1000
                 repeat: true
                 running: true
                 triggeredOnStart: true
@@ -84,7 +84,7 @@ ListView {
                     var timeDifference = new Date().getTime() - stat.dayStarted.getTime()
                     parent.variableTime =
                             timeDifference < 1000 * 60 * 60 * 24 ?
-                                new Date(timeDifference).toISOString().slice(11, -1) :
+                                new Date(timeDifference).toISOString().slice(11, -1).substring(0, 8) :
                                 qsTr("over 24 hours")
                 }
             }
