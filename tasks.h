@@ -28,6 +28,9 @@ public:
     Q_INVOKABLE
     void resetDatabase();
 
+    Q_INVOKABLE
+    void resetModel();
+
 signals:
     void updateTasksModel();
     void updateChecksModel();

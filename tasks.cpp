@@ -119,3 +119,7 @@ void Tasks::resetDatabase() {
 
     updateTasksModel();
 }
+
+void Tasks::resetModel() {
+    updateTasksModel();
+}

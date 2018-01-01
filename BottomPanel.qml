@@ -27,6 +27,13 @@ Rectangle {
 
             onClicked: tasks.resetDatabase()
         }
+
+        Button {
+            text: qsTr("Reset Model")
+            height: parent.height
+
+            onClicked: tasks.resetModel()
+        }
     }
 
     Row {
