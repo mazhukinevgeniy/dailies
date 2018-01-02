@@ -22,10 +22,37 @@ Rectangle {
         }
 
         Button {
+            id: resetDatabaseButton
             text: qsTr("Reset DB")
             height: parent.height
 
-            onClicked: tasks.resetDatabase()
+            state: "normal"
+
+            onClicked: {
+                state = "awaiting confirmation"
+            }
+
+            states: [
+                State {
+                    name: "normal"
+                },
+                State {
+                    name: "awaiting confirmation"
+
+                    PropertyChanges {
+                        target: confirmationDialog
+                        visible: true
+                        text: qsTr("Reset DB? This would remove all tasks")
+                        onConfirm: {
+                            tasks.resetDatabase()
+                            resetDatabaseButton.state = "normal"
+                        }
+                        onDecline: {
+                            resetDatabaseButton.state = "normal"
+                        }
+                    }
+                }
+            ]
         }
 
         Button {

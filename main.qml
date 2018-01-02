@@ -54,6 +54,10 @@ Window {
         id: addTaskDialog
     }
 
+    ConfirmationDialog {
+        id: confirmationDialog
+    }
+
     Timer {
         id: titleTimer
         interval: 1000*40

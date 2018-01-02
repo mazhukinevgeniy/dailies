@@ -6,7 +6,11 @@ Item {
     visible: false
 
     property bool interactive: true
+    property real contentWidth: 0
+    property real contentHeight: 0
     property Component contentDelegate: undefined
+
+    signal clickedOutside()
 
     Rectangle {
         anchors.fill: parent
@@ -17,15 +21,43 @@ Item {
             anchors.fill: parent
             onClicked: {
                 dialog.visible = false
+                clickedOutside()
             }
         }
     }
 
     Rectangle {
-        anchors.fill: parent
-        anchors.margins: 100
+        id: contentRectangle
         radius: 30
         color: "white"
+
+        states: [
+            State {
+                when: contentWidth > 0 && contentHeight > 0
+                PropertyChanges {
+                    target: contentRectangle
+                    anchors.centerIn: dialog
+                    width: contentWidth + radius * 2
+                    height: contentHeight + radius * 2
+                }
+                PropertyChanges {
+                    target: loader
+                    anchors.centerIn: contentRectangle
+                }
+            },
+            State {
+                when: contentWidth <= 0 || contentHeight <= 0
+                PropertyChanges {
+                    target: contentRectangle
+                    anchors.fill: dialog
+                    anchors.margins: 100
+                }
+                PropertyChanges {
+                    target: loader
+                    anchors.fill: contentRectangle
+                }
+            }
+        ]
 
         MouseArea {
             anchors.fill: parent
@@ -35,7 +67,7 @@ Item {
         }
 
         Loader {
-            anchors.fill: parent
+            id: loader
             sourceComponent: contentDelegate
         }
     }

@@ -12,5 +12,6 @@
         <file>assets/setter.jpeg</file>
         <file>BaseDialog.qml</file>
         <file>AddTaskDialog.qml</file>
+        <file>ConfirmationDialog.qml</file>
     </qresource>
 </RCC>
