@@ -54,7 +54,7 @@ QSqlQueryModel * Tasks::getTasksQueryModel() {
     SqlQueryModel *model = new SqlQueryModel();
     model->setQuery(QString("SELECT taskId, description, status FROM tasks "
                             "WHERE NOT status='%1' "
-                            "ORDER BY status, taskId")
+                            "ORDER BY taskId ASC")
                     .arg(__TASK_STATUS_DISABLED), db);
     return model;
 }
