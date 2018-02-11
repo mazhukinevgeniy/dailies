@@ -25,6 +25,8 @@ void Tasks::initTables() {
             "taskId INTEGER PRIMARY KEY,"
             "description TEXT,"
             "status INTEGER)");
+    execute("CREATE TABLE IF NOT EXISTS resetDates ("
+            "date DATE PRIMARY KEY)");
 }
 
 QSqlQuery Tasks::execute(QString query) {
@@ -54,6 +56,13 @@ QSqlQueryModel * Tasks::getTasksQueryModel() {
                             "WHERE NOT status='%1' "
                             "ORDER BY status, taskId")
                     .arg(__TASK_STATUS_DISABLED), db);
+    return model;
+}
+
+QSqlQueryModel * Tasks::getResetsQueryModel() {
+    SqlQueryModel *model = new SqlQueryModel();
+    model->setQuery(QString("SELECT date FROM resetDates "
+                            "ORDER BY date"), db);
     return model;
 }
 
@@ -113,6 +122,8 @@ void Tasks::endDay() {
             .arg(__CHECK_STATUS_FAILED).arg(__CHECK_STATUS_TBD));
     execute(QString("UPDATE tasks SET status='%1' WHERE status='%2'")
             .arg(__TASK_STATUS_ACTIVE).arg(__TASK_STATUS_DONE_FOR_NOW));
+    execute(QString("INSERT INTO resetDates (date) VALUES('%1')")
+            .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss")));
 
     auto knownTasks = execute(QString("SELECT taskId FROM tasks"));
     while (knownTasks.next()) {
@@ -125,6 +136,7 @@ void Tasks::endDay() {
 void Tasks::resetDatabase() {
     execute("DROP TABLE checks");
     execute("DROP TABLE tasks");
+    execute("DROP TABLE resetDates");
     initTables();
 
     updateTasksModel();

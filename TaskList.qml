@@ -11,6 +11,8 @@ ListView {
 
     model: tasks.getTasksQueryModel()
 
+    property real sharedX: 0
+
     delegate: Row {
         id: taskListDelegate
         width: parent.width
@@ -41,61 +43,106 @@ ListView {
             width: parent.width - titlePanelWidth - parent.spacing
             height: parent.height
             interactive: false
+
+            Binding {
+                target: list
+                property: "sharedX"
+                value: contentX
+                when: flickingHorizontally
+            }
+            Binding {
+                target: checks
+                property: "contentX"
+                value: sharedX
+                when: !flickingHorizontally
+            }
+            //TODO: make it work or remove
+            //atm synchronous flicking isn't even needed
         }
     }
 
-    header: Row {
+    header: Column {
         width: parent.width
-        height: taskRowHeight
-        spacing: normalSpacing
-        layoutDirection: Qt.RightToLeft
+        height: taskRowHeight + resetDates.height
+
+        Row {
+            width: parent.width
+            height: taskRowHeight
+            spacing: normalSpacing
+            layoutDirection: Qt.RightToLeft
 
 
-        Item {
-            width: titlePanelWidth
-            height: parent.height
+            Item {
+                width: titlePanelWidth
+                height: parent.height
 
-            Button {
-                anchors.fill: parent
-                anchors.margins: normalSpacing * 0.5
-                text: qsTr("Add new task")
+                Button {
+                    anchors.fill: parent
+                    anchors.margins: normalSpacing * 0.5
+                    text: qsTr("Add new task")
 
-                onClicked: {
-                    addTaskDialog.visible = true
+                    onClicked: {
+                        addTaskDialog.visible = true
+                    }
+                }
+            }
+
+            Text {
+                height: parent.height
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignVCenter
+                text: qsTr("Day started %1 ago").arg(variableTime)
+
+                property string variableTime: "00:00:00.000"
+
+                Timer {
+                    interval: 1000
+                    repeat: true
+                    running: true
+                    triggeredOnStart: true
+
+                    onTriggered: {
+                        var timeDifference = new Date().getTime() - stat.dayStarted.getTime()
+                        parent.variableTime =
+                                timeDifference < 1000 * 60 * 60 * 24 ?
+                                    new Date(timeDifference).toISOString().slice(11, -1).substring(0, 8) :
+                                    qsTr("over 24 hours")
+                        //TODO: link with reset dates instead
+                    }
                 }
             }
         }
 
-        Text {
-            height: parent.height
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignVCenter
-            text: qsTr("Day started %1 ago").arg(variableTime)
+        ListView {
+            id: resetDates
+            width: parent.width - titlePanelWidth - normalSpacing * 0.5
+            //TODO: this is not maintainable code ^tm, need to get something done with titlePanelWidth
+            //rework layout?
+            height: 20
+            spacing: normalSpacing
+            orientation: Qt.Horizontal
+            layoutDirection: Qt.RightToLeft
+            model: tasks.getResetsQueryModel()
+            interactive: false
+            contentX: sharedX
 
-            property string variableTime: "00:00:00.000"
+            delegate: Rectangle {
+                width: taskRowHeight
+                height: 20
+                color: "grey"
 
-            Timer {
-                interval: 1000
-                repeat: true
-                running: true
-                triggeredOnStart: true
-
-                onTriggered: {
-                    var timeDifference = new Date().getTime() - stat.dayStarted.getTime()
-                    parent.variableTime =
-                            timeDifference < 1000 * 60 * 60 * 24 ?
-                                new Date(timeDifference).toISOString().slice(11, -1).substring(0, 8) :
-                                qsTr("over 24 hours")
+                Text {
+                    anchors.centerIn: parent
+                    text: model.date.substring(5, 10)
                 }
             }
-        }
-    }
-
-    Connections {
-        target: tasks
-
-        onUpdateTasksModel: {
-            list.model = tasks.getTasksQueryModel()
+            Connections {
+                target: tasks
+                onUpdateTasksModel: {
+                    list.model = tasks.getTasksQueryModel()
+                    resetDates.model = tasks.getResetsQueryModel()
+                }
+            }
         }
     }
 }

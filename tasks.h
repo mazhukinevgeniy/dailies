@@ -9,10 +9,13 @@ class Tasks : public QObject
 public:
     explicit Tasks(QObject *parent = nullptr);
 
+    //TODO: rethink db design
     Q_INVOKABLE
     QSqlQueryModel* getChecksQueryModel(QVariant taskId);
     Q_INVOKABLE
     QSqlQueryModel* getTasksQueryModel();
+    Q_INVOKABLE
+    QSqlQueryModel* getResetsQueryModel();
 
     Q_INVOKABLE
     void addTask(QString description);
