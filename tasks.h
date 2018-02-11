@@ -23,6 +23,9 @@ public:
     void markDone(QVariant checkId);
 
     Q_INVOKABLE
+    void upgrade(QVariant checkId);
+
+    Q_INVOKABLE
     void endDay();
 
     Q_INVOKABLE

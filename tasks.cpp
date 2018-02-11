@@ -19,6 +19,7 @@ void Tasks::initTables() {
             "checkId INTEGER PRIMARY KEY,"
             "taskId INTEGER,"
             "status INTEGER,"
+            "rank INTEGER,"
             "date DATE)");
     execute("CREATE TABLE IF NOT EXISTS tasks ("
             "taskId INTEGER PRIMARY KEY,"
@@ -41,7 +42,7 @@ QSqlQuery Tasks::execute(QString query) {
 
 QSqlQueryModel * Tasks::getChecksQueryModel(QVariant taskId) {
     SqlQueryModel *model = new SqlQueryModel();
-    model->setQuery(QString("SELECT status, checkId FROM checks "
+    model->setQuery(QString("SELECT status, rank, checkId FROM checks "
                             "WHERE taskId='%1' ORDER BY checkId DESC")
                     .arg(taskId.toLongLong()), db);
     return model;
@@ -57,8 +58,8 @@ QSqlQueryModel * Tasks::getTasksQueryModel() {
 }
 
 void Tasks::addCheck(QVariant taskId) {
-    execute(QString("INSERT INTO checks (taskId, status, date)"
-                    "VALUES('%1','%2','%3')").arg(taskId.toLongLong())
+    execute(QString("INSERT INTO checks (taskId, status, rank, date)"
+                    "VALUES('%1','%2', '0', '%3')").arg(taskId.toLongLong())
             .arg(__CHECK_STATUS_TBD)
             .arg(QDate::currentDate().toString("yyyy-MM-dd")));
 }
@@ -88,11 +89,20 @@ void Tasks::disableTask(QVariant taskId) {
 }
 
 void Tasks::markDone(QVariant checkId) {
-    execute(QString("UPDATE checks SET status='%1' WHERE checkId='%2'")
+    execute(QString("UPDATE checks SET status='%1', rank='1' WHERE checkId='%2'")
             .arg(__CHECK_STATUS_DONE).arg(checkId.toLongLong()));
     execute(QString("UPDATE tasks SET status='%1' WHERE taskId="
                     "(SELECT taskId FROM checks WHERE checkId='%2')")
             .arg(__TASK_STATUS_DONE_FOR_NOW).arg(checkId.toLongLong()));
+
+    updateTasksModel();
+}
+
+void Tasks::upgrade(QVariant checkId) {
+    execute(QString("UPDATE checks SET rank=1+"
+                    "(SELECT rank FROM checks "
+                    "WHERE checkId='%1') WHERE checkId='%1'")
+            .arg(checkId.toLongLong()));
 
     updateTasksModel();
 }
