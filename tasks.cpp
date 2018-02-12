@@ -20,11 +20,17 @@ void Tasks::initTables() {
             "taskId INTEGER,"
             "status INTEGER,"
             "rank INTEGER,"
-            "date DATE)");
+            "date DATE)");//TODO: merge status with tags
     execute("CREATE TABLE IF NOT EXISTS tasks ("
             "taskId INTEGER PRIMARY KEY,"
             "description TEXT,"
             "status INTEGER)");
+    execute("CREATE TABLE IF NOT EXISTS tags ("
+            "taskId INTEGER,"
+            "tag TEXT,"
+            "PRIMARY KEY (taskId, tag))");
+
+    //TODO: why does resetdates exist?
     execute("CREATE TABLE IF NOT EXISTS resetDates ("
             "date DATE PRIMARY KEY)");
 }
@@ -74,21 +80,39 @@ void Tasks::addCheck(QVariant taskId) {
 }
 
 //TODO: add protection from sql injections
-void Tasks::addTask(QString description) {
+void Tasks::addTask(QString description, QStringList tags) {
     execute(QString("INSERT INTO tasks (description, status)"
-                    "VALUES('%1','%2')").arg(description).arg(__TASK_STATUS_ACTIVE));
+                    "VALUES('%1','%2')")
+            .arg(description).arg(__TASK_STATUS_ACTIVE));
 
+    //TODO: there must be a better way to get new task's id:
     auto getNewTaskId = execute(QString("SELECT taskId FROM tasks"
                                         " WHERE description='%1' ORDER BY taskId DESC")
                                 .arg(description));
     if (getNewTaskId.next()) {
         QVariant taskId = getNewTaskId.value(0);
         addCheck(taskId);
+
+        for (QString tag : tags) {
+            addTag(taskId, tag);
+        }
     } else {
         qDebug() << QString("no id found for some reason") << getNewTaskId.lastError().text();
     }
 
     updateTasksModel();//no need to updateChecksModel as check model for the new task would be fresh anyway
+}
+
+bool Tasks::checkTag(QVariant taskId, QString tag) {
+    return execute(QString("SELECT taskId FROM tags "
+                           "WHERE taskId='%1' AND tag='%2'")
+                   .arg(taskId.toLongLong()).arg(tag)).next();
+}
+
+void Tasks::addTag(QVariant taskId, QString tag) {
+    execute(QString("INSERT INTO tags (taskId, tag) "
+                    "VALUES('%1','%2')")
+            .arg(taskId.toLongLong()).arg(tag));
 }
 
 void Tasks::disableTask(QVariant taskId) {
@@ -137,6 +161,7 @@ void Tasks::resetDatabase() {
     execute("DROP TABLE checks");
     execute("DROP TABLE tasks");
     execute("DROP TABLE resetDates");
+    execute("DROP TABLE tags");
     initTables();
 
     updateTasksModel();

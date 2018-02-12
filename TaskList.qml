@@ -32,16 +32,25 @@ ListView {
                 text: model.description
 
                 Image {
+                    id: image
                     width: height * sourceSize.width / sourceSize.height
                     height: parent.height * 0.3
                     anchors.right: parent.right
                     anchors.top: parent.top
                     source: "assets/doable.png"
+                    visible: //model.extraDoable
+                             tasks.checkTag(model.taskId, "doable")
                 }
 
                 onClicked: {
                     //TODO: open edit dialog
-                    tasks.disableTask(model.taskId)
+                    //TODO: this is really really bad, move to dedicated model asap
+                    if (!image.visible) {
+                        tasks.addTag(model.taskId, "doable")
+                        image.visible = tasks.checkTag(model.taskId, "doable")
+                    } else {
+                        tasks.disableTask(model.taskId)
+                    }
                 }
             }
         }

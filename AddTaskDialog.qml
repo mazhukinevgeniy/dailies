@@ -80,7 +80,7 @@ BaseDialog {
 
                 onClicked: {
                     if (newTask.state === "inputting") {
-                        tasks.addTask(newTask.text)
+                        tasks.addTask(newTask.text) //TODO: form tags in task creation dialog?
                         dialog.visible = false
                     }
                 }
