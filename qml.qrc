@@ -13,5 +13,6 @@
         <file>BaseDialog.qml</file>
         <file>AddTaskDialog.qml</file>
         <file>ConfirmationDialog.qml</file>
+        <file>assets/doable.png</file>
     </qresource>
 </RCC>

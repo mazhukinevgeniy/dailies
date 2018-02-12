@@ -31,6 +31,14 @@ ListView {
                 anchors.margins: normalSpacing * 0.5
                 text: model.description
 
+                Image {
+                    width: height * sourceSize.width / sourceSize.height
+                    height: parent.height * 0.3
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    source: "assets/doable.png"
+                }
+
                 onClicked: {
                     //TODO: open edit dialog
                     tasks.disableTask(model.taskId)
