@@ -14,7 +14,6 @@ Rectangle {
             height: parent.height
 
             onClicked: {
-                stat.dayStarted = new Date()
                 tasks.endDay()
                 //TODO: replace with slot to run on a separate event queue
                 // ? if it doesn't work, explicitly create a thread for such tasks

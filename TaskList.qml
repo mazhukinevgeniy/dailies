@@ -12,6 +12,7 @@ ListView {
     model: tasks.getTasksQueryModel()
 
     property real sharedX: 0
+    property date lastReset: new Date()
 
     delegate: Row {
         id: taskListDelegate
@@ -103,61 +104,79 @@ ListView {
                     }
                 }
             }
+        }
+
+        Row {
+            width: parent.width
+            height: resetDates.height
+            spacing: normalSpacing
+            ListView {
+                id: resetDates
+                width: parent.width - titlePanelWidth - normalSpacing * 0.5
+                //TODO: this is not maintainable code ^tm, need to get something done with titlePanelWidth
+                //rework layout?
+                height: 20
+                spacing: normalSpacing
+                orientation: Qt.Horizontal
+                layoutDirection: Qt.RightToLeft
+                model: tasks.getResetsQueryModel()
+                interactive: false
+                contentX: sharedX
+
+                delegate: Rectangle {
+                    width: taskRowHeight
+                    height: 20
+                    color: "grey"
+
+                    function toJsDate(modelDate) {
+                        //yyyy-MM-dd HH:mm:ss
+                        return new Date(modelDate.substring(0, 4),
+                                        modelDate.substring(5, 7),
+                                        modelDate.substring(8, 10),
+                                        modelDate.substring(11, 13),
+                                        modelDate.substring(14, 16),
+                                        modelDate.substring(17, 19))
+                    }
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: model.date.substring(5, 10)
+                    }
+                    Binding {
+                        when: index == 0
+                        target: list
+                        property: "lastReset"
+                        value: toJsDate(model.date)
+                    }
+                }
+                Connections {
+                    target: tasks
+                    onUpdateTasksModel: {
+                        list.model = tasks.getTasksQueryModel()
+                        resetDates.model = tasks.getResetsQueryModel()
+                    }
+                }
+            }
 
             Text {
-                height: parent.height
-                horizontalAlignment: Text.AlignRight
+                width: titlePanelWidth
+                height: resetDates.height
                 verticalAlignment: Text.AlignVCenter
-                text: qsTr("Day started %1 ago").arg(variableTime)
-
-                property string variableTime: "00:00:00.000"
 
                 Timer {
                     interval: 1000
                     repeat: true
-                    running: true
+                    running: lastReset
                     triggeredOnStart: true
 
                     onTriggered: {
-                        var timeDifference = new Date().getTime() - stat.dayStarted.getTime()
-                        parent.variableTime =
+                        var timeDifference = new Date().getTime() - lastReset.getTime()
+                        parent.text = !lastReset ? "" :
                                 timeDifference < 1000 * 60 * 60 * 24 ?
                                     new Date(timeDifference).toISOString().slice(11, -1).substring(0, 8) :
                                     qsTr("over 24 hours")
-                        //TODO: link with reset dates instead
+                        //TODO: support differences bigger than 24h
                     }
-                }
-            }
-        }
-
-        ListView {
-            id: resetDates
-            width: parent.width - titlePanelWidth - normalSpacing * 0.5
-            //TODO: this is not maintainable code ^tm, need to get something done with titlePanelWidth
-            //rework layout?
-            height: 20
-            spacing: normalSpacing
-            orientation: Qt.Horizontal
-            layoutDirection: Qt.RightToLeft
-            model: tasks.getResetsQueryModel()
-            interactive: false
-            contentX: sharedX
-
-            delegate: Rectangle {
-                width: taskRowHeight
-                height: 20
-                color: "grey"
-
-                Text {
-                    anchors.centerIn: parent
-                    text: model.date.substring(5, 10)
-                }
-            }
-            Connections {
-                target: tasks
-                onUpdateTasksModel: {
-                    list.model = tasks.getTasksQueryModel()
-                    resetDates.model = tasks.getResetsQueryModel()
                 }
             }
         }
