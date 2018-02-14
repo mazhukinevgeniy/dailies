@@ -68,7 +68,7 @@ QSqlQueryModel * Tasks::getTasksQueryModel() {
 QSqlQueryModel * Tasks::getResetsQueryModel() {
     SqlQueryModel *model = new SqlQueryModel();
     model->setQuery(QString("SELECT date FROM resetDates "
-                            "ORDER BY date"), db);
+                            "ORDER BY date DESC"), db);
     return model;
 }
 
