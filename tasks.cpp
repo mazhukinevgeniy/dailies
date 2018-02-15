@@ -96,6 +96,11 @@ void Tasks::addTask(QString description, QStringList tags) {
         for (QString tag : tags) {
             addTag(taskId, tag);
         }
+
+        if (taskId == 1) { //corner case: adding first task ever
+            execute(QString("INSERT INTO resetDates (date) VALUES('%1')")
+                    .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss")));
+        }
     } else {
         qDebug() << QString("no id found for some reason") << getNewTaskId.lastError().text();
     }
@@ -146,12 +151,16 @@ void Tasks::endDay() {
             .arg(__CHECK_STATUS_FAILED).arg(__CHECK_STATUS_TBD));
     execute(QString("UPDATE tasks SET status='%1' WHERE status='%2'")
             .arg(__TASK_STATUS_ACTIVE).arg(__TASK_STATUS_DONE_FOR_NOW));
-    execute(QString("INSERT INTO resetDates (date) VALUES('%1')")
-            .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss")));
 
     auto knownTasks = execute(QString("SELECT taskId FROM tasks"));
+    int tasks = 0; //QSqlQuery::size() isn't supported for sqlite I guess?
     while (knownTasks.next()) {
+        ++tasks;
         addCheck(knownTasks.value(0));
+    }
+    if (tasks) {
+        execute(QString("INSERT INTO resetDates (date) VALUES('%1')")
+                .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss")));
     }
 
     updateTasksModel();
