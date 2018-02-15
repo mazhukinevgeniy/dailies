@@ -4,6 +4,7 @@ MouseArea {
     id: tile
     width: tileWidth
     height: width
+    enabled: index == 0
 
     Image {
         id: image
