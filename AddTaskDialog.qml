@@ -50,7 +50,7 @@ BaseDialog {
 
             Keys.onReturnPressed: {
                 if (state === "inputting") {
-                    tasks.addTask(text)
+                    taskModel.addTask(newTask.text)
                     dialog.visible = false
                 }
             }
@@ -80,7 +80,7 @@ BaseDialog {
 
                 onClicked: {
                     if (newTask.state === "inputting") {
-                        tasks.addTask(newTask.text) //TODO: form tags in task creation dialog?
+                        taskModel.addTask(newTask.text)
                         dialog.visible = false
                     }
                 }

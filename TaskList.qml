@@ -1,94 +1,190 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
+import QtGraphicalEffects 1.0
+import app.enums 1.0
 
 ListView {
     id: list
     spacing: normalSpacing
 
-    displaced: Transition {
-        NumberAnimation { properties: "x,y"; duration: 500 }
-    }//TODO: make it work with sql models
+    //TODO: support ui with nice transitions
 
-    model: tasks.getTasksQueryModel()
+    model: taskModel
+    cacheBuffer: Math.min(count, 200)
 
     property real sharedX: 0
     property date lastReset: new Date()
 
-    delegate: Row {
-        id: taskListDelegate
-        width: parent.width
+    function getData(r, c) {
+        return list.model.data(list.model.index(r, c))
+    }
+    function setData(r, c, v) {
+        return list.model.setData(list.model.index(r, c), v)
+    }
+
+    function submitAndSelect() {
+        var indexToRestore = indexAt(contentX, contentY)
+        //TODO: look for a better solution
+        model.submitAll()
+        model.select()
+        positionViewAtIndex(indexToRestore, ListView.Beginning)
+    }
+
+    Connections {
+        target: app
+        onVisibleChanged: {
+            if (app.visible) {
+                submitAndSelect()
+            }
+        }
+    }
+
+    delegate: Item {
+        width: list.width
         height: taskRowHeight
-        spacing: normalSpacing * 0.5
-        layoutDirection: Qt.RightToLeft
 
-        property var taskId: model.taskId
+        property var rowIndex: model.index
 
-        Item {
-            width: titlePanelWidth
-            height: parent.height
+        Row {
+            id: taskListDelegate
+            width: parent.width
+            height: taskRowHeight
+            spacing: normalSpacing
+            layoutDirection: Qt.RightToLeft
 
-            Button {
-                anchors.fill: parent
-                anchors.margins: normalSpacing * 0.5
-                text: model.description
+            Item {
+                width: titlePanelWidth
+                height: parent.height
 
-                Image {
-                    id: image
-                    width: height * sourceSize.width / sourceSize.height
-                    height: parent.height * 0.3
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    source: "assets/doable.png"
-                    visible: //model.extraDoable
-                             tasks.checkTag(model.taskId, "doable")
-                }
+                Button {
+                    anchors.fill: parent
+                    anchors.margins: normalSpacing * 0.5
+                    text: getData(rowIndex, 1)
 
-                onClicked: {
-                    //TODO: open edit dialog
-                    //TODO: this is really really bad, move to dedicated model asap
-                    if (!image.visible) {
-                        tasks.addTag(model.taskId, "doable")
-                        image.visible = tasks.checkTag(model.taskId, "doable")
-                    } else {
-                        tasks.disableTask(model.taskId)
+                    Image {
+                        id: image
+                        width: height * sourceSize.width / sourceSize.height
+                        height: parent.height * 0.3
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        source: "assets/doable.png"
+                        visible: getData(rowIndex, 2) === Tasks.DOABLE
                     }
+
+                    onClicked: {
+                        //TODO: add edit dialog
+                        if (getData(rowIndex, 2) === Tasks.ACTIVE) {
+                            setData(rowIndex, 2, Tasks.DOABLE)
+                        } else {
+                            setData(rowIndex, 2, Tasks.DISABLED)
+                        }
+                        submitAndSelect()
+                    }
+                }
+            }
+
+            Repeater {
+                model: getData(rowIndex, 3).split("")
+                delegate: MouseArea {
+                    id: tile
+                    width: tileWidth
+                    height: width
+                    enabled: index == 0
+
+                    onClicked: {
+                        var history = getData(rowIndex, 3)
+                        var res = Math.min(parseInt(history[0]) + 1, 9) + history.substring(1)
+                        setData(rowIndex, 3, res)
+                        submitAndSelect()
+                    }
+
+                    Image {
+                        id: checkImg
+                        anchors.fill: parent
+                    }
+
+                    Text {
+                        id: checkText
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        color: "black"
+                    }
+
+                    states: [
+                        State {
+                            name: "failed"
+                            when: modelData == "0" && !enabled
+
+                            PropertyChanges {
+                                target: checkImg
+                                source: "assets/002-error.png"
+                            }
+                        },
+                        State {
+                            name: "to be done"
+                            when: modelData == "0" && enabled
+
+                            PropertyChanges {
+                                target: checkImg
+                                source: "assets/001-info.png"
+                            }
+                        },
+                        State {
+                            name: "done"
+                            when: modelData > 0
+
+                            PropertyChanges {
+                                target: checkImg
+                                source: "assets/003-success.png"
+                            }
+                            PropertyChanges {
+                                target: checkText
+                                text: modelData > 1 ? modelData : ""
+                                font.bold: modelData > 2
+                                font.pointSize: modelData > 4 ? 8 + modelData * 0.4 : 10
+                            }
+                        }
+                    ]
                 }
             }
         }
 
-        DailyCheckList {
-            id: checks
-            width: parent.width - titlePanelWidth - parent.spacing
-            height: parent.height
-            interactive: false
+        Item {
+            width: tileWidth
+            height: width
+            anchors.left: parent.left
 
-            Binding {
-                target: list
-                property: "sharedX"
-                value: contentX
-                when: flickingHorizontally
+            LinearGradient {
+                anchors.fill: parent
+                start: Qt.point(0, 0)
+                end: Qt.point(tileWidth, 0)
+                gradient: Gradient {
+                    GradientStop {
+                        position: 0.0
+                        color: Qt.rgba(1, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 0.05
+                        color: Qt.rgba(1, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 1.0
+                        color: Qt.rgba(1, 1, 1, 0)
+                    }
+                }
             }
-            Binding {
-                target: checks
-                property: "contentX"
-                value: sharedX
-                when: !flickingHorizontally
-            }
-            //TODO: make it work or remove
-            //atm synchronous flicking isn't even needed
         }
     }
 
     header: Column {
         width: parent.width
-        height: taskRowHeight + resetDates.height
+        height: taskRowHeight
 
         Row {
             width: parent.width
             height: taskRowHeight
             spacing: normalSpacing
             layoutDirection: Qt.RightToLeft
-
 
             Item {
                 width: titlePanelWidth
@@ -101,81 +197,6 @@ ListView {
 
                     onClicked: {
                         addTaskDialog.visible = true
-                    }
-                }
-            }
-        }
-
-        Row {
-            width: parent.width
-            height: resetDates.height
-            spacing: normalSpacing
-            ListView {
-                id: resetDates
-                width: parent.width - titlePanelWidth - normalSpacing * 0.5
-                //TODO: this is not maintainable code ^tm, need to get something done with titlePanelWidth
-                //rework layout?
-                height: 20
-                spacing: normalSpacing
-                orientation: Qt.Horizontal
-                layoutDirection: Qt.RightToLeft
-                model: tasks.getResetsQueryModel()
-                interactive: false
-                contentX: sharedX
-
-                delegate: Rectangle {
-                    width: taskRowHeight
-                    height: 20
-                    color: "grey"
-
-                    function toJsDate(modelDate) {
-                        //yyyy-MM-dd HH:mm:ss
-                        return new Date(modelDate.substring(0, 4),
-                                        modelDate.substring(5, 7),
-                                        modelDate.substring(8, 10),
-                                        modelDate.substring(11, 13),
-                                        modelDate.substring(14, 16),
-                                        modelDate.substring(17, 19))
-                    }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: model.date.substring(5, 10)
-                    }
-                    Binding {
-                        when: index == 0
-                        target: list
-                        property: "lastReset"
-                        value: toJsDate(model.date)
-                    }
-                }
-                Connections {
-                    target: tasks
-                    onUpdateTasksModel: {
-                        list.model = tasks.getTasksQueryModel()
-                        resetDates.model = tasks.getResetsQueryModel()
-                    }
-                }
-            }
-
-            Text {
-                width: titlePanelWidth
-                height: resetDates.height
-                verticalAlignment: Text.AlignVCenter
-
-                Timer {
-                    interval: 1000
-                    repeat: true
-                    running: lastReset
-                    triggeredOnStart: true
-
-                    onTriggered: {
-                        var timeDifference = new Date().getTime() - lastReset.getTime()
-                        parent.text = !lastReset ? "" :
-                                timeDifference < 1000 * 60 * 60 * 24 ?
-                                    new Date(timeDifference).toISOString().slice(11, -1).substring(0, 8) :
-                                    qsTr("over 24 hours")
-                        //TODO: support differences bigger than 24h
                     }
                 }
             }

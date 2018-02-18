@@ -1,11 +1,11 @@
 TEMPLATE = app
 
 QT += qml quick sql
-CONFIG += c++11
+CONFIG += c++14
 
 SOURCES += main.cpp \
-    sqlquerymodel.cpp \
-    tasks.cpp
+    tasks.cpp \
+    tasksgroupmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,13 +20,7 @@ QML_DESIGNER_IMPORT_PATH =
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += \
-    QT_DEPRECATED_WARNINGS \
-    __CHECK_STATUS_TBD=101 \
-    __CHECK_STATUS_DONE=102 \
-    __CHECK_STATUS_FAILED=103 \
-    __TASK_STATUS_ACTIVE=2 \
-    __TASK_STATUS_DISABLED=8 \
-    __TASK_STATUS_DONE_FOR_NOW=9
+    QT_DEPRECATED_WARNINGS
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -39,5 +33,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    sqlquerymodel.h \
-    tasks.h
+    tasks.h \
+    tasksgroupmodel.h

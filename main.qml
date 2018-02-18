@@ -48,7 +48,7 @@ Window {
 
     Acknowledgements {
         id: acknowledgements
-    }//TODO(low priority): make it loader-based someday
+    }//TODO: (low priority) make it loader-based someday
 
     AddTaskDialog {
         id: addTaskDialog
@@ -66,9 +66,9 @@ Window {
         triggeredOnStart: true
 
         property var titles: [
-            "Coding on the weekend",
-            "Good enough to ship",
-            "Old piece of cardboard vs Sound financial decisions"
+            qsTr("Coding on the weekend"),
+            qsTr("Good enough to ship"),
+            qsTr("Checklists")
         ]
 
         onTriggered: {

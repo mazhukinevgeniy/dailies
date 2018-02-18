@@ -15,8 +15,6 @@ Rectangle {
 
             onClicked: {
                 tasks.endDay()
-                //TODO: replace with slot to run on a separate event queue
-                // ? if it doesn't work, explicitly create a thread for such tasks
             }
         }
 
@@ -52,13 +50,6 @@ Rectangle {
                     }
                 }
             ]
-        }
-
-        Button {
-            text: qsTr("Reset Model")
-            height: parent.height
-
-            onClicked: tasks.resetModel()
         }
     }
 
